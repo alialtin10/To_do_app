@@ -1,0 +1,4 @@
+{
+    "ros.distro": "melodic",
+    "cmake.sourceDirectory": "/home/agv/todo_app/to_do_app/linux"
+}
