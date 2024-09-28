@@ -1,0 +1,8 @@
+{
+    "title" : "Today do - it",
+    "empty_task_list" : "Add a task",
+    "add_task" : "What is task ?",
+    "remove_task" : "This task was deleted",
+    "search_not_found" : "we couldn't finf anything"
+
+}

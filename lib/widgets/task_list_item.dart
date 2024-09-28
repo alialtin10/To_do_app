@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:to_do_app/data/local_storage.dart';
+import 'package:to_do_app/main.dart';
 import 'package:to_do_app/models/task_model.dart';
 
 class TastItem extends StatefulWidget {
@@ -12,16 +14,18 @@ class TastItem extends StatefulWidget {
 
 class _TaskItemState extends State<TastItem> {
   TextEditingController _tasknameController = TextEditingController();
+  late LocalStorage _localStorage;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _tasknameController.text = widget.task.name;
+    _localStorage = locator<LocalStorage>();
   }
 
   @override
   Widget build(BuildContext context) {
+      _tasknameController.text = widget.task.name;
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -35,6 +39,7 @@ class _TaskItemState extends State<TastItem> {
         leading: GestureDetector(
           onTap: () {
             widget.task.isCompleted = !widget.task.isCompleted;
+            _localStorage.updateTask(task: widget.task);
             setState(() {});
           },
           // Bu kısım ile to do listte check yapma kısmı oluşturulmuş
@@ -63,6 +68,7 @@ class _TaskItemState extends State<TastItem> {
                 onSubmitted: (newtask) {
                   if (newtask.length > 3) {
                     widget.task.name = newtask;
+                    _localStorage.updateTask(task: widget.task);
                   }
                 },
               ),
