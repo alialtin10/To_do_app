@@ -3,6 +3,9 @@
     "empty_task_list" : "Add a task",
     "add_task" : "What is task ?",
     "remove_task" : "This task was deleted",
-    "search_not_found" : "we couldn't finf anything"
-
+    "search_not_found" : "we couldn't finf anything",
+    "navigation_day_label" : "To-Do",
+    "navigation_calender_label" : "Calendar",
+    "navigation_study_label" : "Study",
+    "calendar_page_title" : "Calendar"
 }

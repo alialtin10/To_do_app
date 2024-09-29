@@ -44,6 +44,8 @@ dependencies:
   build_runner: ^2.4.12
   get_it: ^8.0.0
   easy_localization: ^3.0.7
+  table_calendar: ^3.1.2
+  syncfusion_flutter_calendar: ^27.1.50
   #flutter_datetime_picker: ^1.5.1
 
 dev_dependencies:

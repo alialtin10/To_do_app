@@ -6,6 +6,7 @@ import 'package:to_do_app/data/local_storage.dart';
 import 'package:to_do_app/pages/home_page.dart';
 import 'package:to_do_app/models/task_model.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:to_do_app/widgets/NavigationBar.dart';
 
 
 
@@ -62,7 +63,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home:  Navigationbar(),
     );
   }
 }

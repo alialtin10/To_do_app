@@ -3,5 +3,10 @@
     "empty_task_list" : "Görev ekle",
     "add_task" : "Görev nedir?",
     "remove_task" : "Görev silindi",
-    "search_not_found" : "Aradığınızı bulamadık"
+    "search_not_found" : "Aradığınızı bulamadık",
+    "navigation_day_label" : "Yapilacaklar",
+    "navigation_calender_label" : "Takvim",
+    "navigation_study_label" : "Çalışmak",
+    "calendar_page_title" : "Takvim"
+
 }

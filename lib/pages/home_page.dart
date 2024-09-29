@@ -4,6 +4,7 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:to_do_app/data/local_storage.dart';
 import 'package:to_do_app/main.dart';
 import 'package:to_do_app/models/task_model.dart';
+import 'package:to_do_app/widgets/NavigationBar.dart';
 import 'package:to_do_app/widgets/custom_search_delegate.dart';
 import 'package:to_do_app/widgets/task_list_item.dart';
 
@@ -30,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //bottomNavigationBar: Navigationbar(),
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: GestureDetector(
@@ -125,6 +127,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
   
+  void _BodyToDo(){
+
+  }
+  
+
   void _getAllTaskFromDb() async {
     _allTasks = await _localStorage.getAllTask();
     setState(() {
