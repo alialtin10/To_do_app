@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //bottomNavigationBar: Navigationbar(),
+        //bottomNavigationBar: Navigationbar(),
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: GestureDetector(
@@ -48,9 +48,11 @@ class _HomePageState extends State<HomePage> {
           ),
           centerTitle: false,
           actions: [
-            IconButton(onPressed: () {
-              _showSearhTask();
-            }, icon: const Icon(Icons.search)),
+            IconButton(
+                onPressed: () {
+                  _showSearhTask();
+                },
+                icon: const Icon(Icons.search)),
             IconButton(
                 onPressed: () {
                   _showAddTaskBottomSheet();
@@ -63,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   var _listeleman = _allTasks[index];
                   return Dismissible(
-                      background:  Row(
+                      background: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Icon(
@@ -71,14 +73,14 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.red,
                           ),
                           const SizedBox(width: 8),
-                           Text(
+                          Text(
                             'remove_task',
                             style: TextStyle(color: Colors.red),
                           ).tr()
                         ],
                       ),
                       key: Key(_listeleman.id),
-                      onDismissed: (direction)  {
+                      onDismissed: (direction) {
                         _allTasks.removeAt(index);
                         _localStorage.deleteTask(task: _listeleman);
                         setState(() {});
@@ -87,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 itemCount: _allTasks.length,
               )
-            :  Center(
+            : Center(
                 child: Text('empty_task_list').tr(),
               ));
   }
@@ -103,8 +105,8 @@ class _HomePageState extends State<HomePage> {
           child: ListTile(
             title: TextField(
               autofocus: true,
-              style:  const TextStyle(fontSize: 20),
-              decoration:  InputDecoration(
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
                 hintText: "add_task".tr(),
                 border: InputBorder.none,
               ),
@@ -126,21 +128,15 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-  
-  void _BodyToDo(){
-
-  }
-  
 
   void _getAllTaskFromDb() async {
     _allTasks = await _localStorage.getAllTask();
-    setState(() {
-      
-    });
+    setState(() {});
   }
-  
+
   void _showSearhTask() async {
-    await showSearch(context: context, delegate: CustomSearchDelegate(allTasks:  _allTasks));
+    await showSearch(
+        context: context, delegate: CustomSearchDelegate(allTasks: _allTasks));
     _getAllTaskFromDb();
   }
 }
