@@ -4,7 +4,6 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:to_do_app/data/local_storage.dart';
 import 'package:to_do_app/main.dart';
 import 'package:to_do_app/models/task_model.dart';
-import 'package:to_do_app/widgets/NavigationBar.dart';
 import 'package:to_do_app/widgets/custom_search_delegate.dart';
 import 'package:to_do_app/widgets/task_list_item.dart';
 
@@ -73,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.red,
                           ),
                           const SizedBox(width: 8),
-                          Text(
+                          const Text(
                             'remove_task',
                             style: TextStyle(color: Colors.red),
                           ).tr()
@@ -113,9 +112,8 @@ class _HomePageState extends State<HomePage> {
               onSubmitted: (value) {
                 Navigator.of(context).pop();
                 if (value.length > 3) {
-                  DatePicker.showTimePicker(context, showSecondsColumn: false,
-                      onConfirm: (time) async {
-                    var addNewTask = Task.create(name: value, createdAt: time);
+                  DatePicker.showDatePicker(context, onConfirm: (time) async {
+                     var addNewTask = Task.create(name: value, createdAt: time);
                     _allTasks.insert(0, addNewTask);
                     await _localStorage.addTask(task: addNewTask);
                     setState(() {});

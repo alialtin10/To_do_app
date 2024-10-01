@@ -56,7 +56,7 @@ class _TaskItemState extends State<TastItem> {
         ),
         title: widget.task.isCompleted
             ? Text(
-                widget.task.name,
+                widget.task.name,         
                 style: const TextStyle(
                     decoration: TextDecoration.lineThrough, color: Colors.grey),
               )

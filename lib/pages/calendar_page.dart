@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:to_do_app/models/task_model.dart';
 
@@ -11,7 +12,16 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  List<Appointment> _appointments = [];
+  DateTime? _selectedDate;
+  late List<Task> _allTask;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _allTask = <Task>[];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,71 +33,68 @@ class _CalendarPageState extends State<CalendarPage> {
         style: TextStyle(
             color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
       ).tr()),
-      body: Container(
-        child: SfCalendar(
-          dataSource: EventDataSource(_appointments),
-          onTap: (CalendarTapDetails details) {
-            if (details.targetElement == CalendarElement.calendarCell) {
-              _showAddAppointmentDialog(details.date!);
-            }
-          },
-          backgroundColor: Colors.white,
-          view: CalendarView.month,
-          monthViewSettings: const MonthViewSettings(
-              appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
+      body: SfCalendar(
+        view: CalendarView.month,
+        firstDayOfWeek: 1,
+        allowAppointmentResize: true,
+        allowDragAndDrop: true,
+        dataSource: EventDataSource(_allTask),
+        allowedViews: [
+          CalendarView.day,
+          CalendarView.month,
+        ],
+        showNavigationArrow: true,
+        monthViewSettings: const MonthViewSettings(
+          showAgenda: true,
+          showTrailingAndLeadingDates: false,
+          //agendaViewHeight: 100,
+          navigationDirection: MonthNavigationDirection.horizontal,
         ),
+        onTap: (details) {
+          if (details.targetElement == CalendarElement.calendarCell) {
+            _showAddTaskBottomSheet(context);
+          }
+        },
       ),
     );
   }
 
-  void _showAddAppointmentDialog(DateTime selectedDate) {
-    final TextEditingController _eventController = TextEditingController();
-
-    showDialog(
+  void _showAddTaskBottomSheet(BuildContext context) {
+    showModalBottomSheet(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Yeni Etkinlik Ekle'),
-          content: TextField(
-            controller: _eventController,
-            decoration: InputDecoration(hintText: 'Etkinlik Adı'),
+        return Container(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          width: MediaQuery.of(context).size.width,
+          child: ListTile(
+            title: TextField(
+              autofocus: true,
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                hintText: "add_task".tr(),
+                border: InputBorder.none,
+              ),
+              onSubmitted: (value) {
+                Navigator.of(context).pop();
+                if (value.length > 3) {
+                  DatePicker.showDatePicker(context, onConfirm: (time) async {
+                    var addNewTask = Task.create(name: value, createdAt: time);
+                    _allTask.insert(0, addNewTask);
+                    setState(() {});
+                  });
+                }
+              },
+            ),
           ),
-          actions: [
-            TextButton(
-              child: Text('İptal'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Ekle'),
-              onPressed: () {
-                _addAppointment(selectedDate, _eventController.text);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
         );
       },
     );
   }
-
-  // Girilen etkinliği listeye ekliyoruz
-  void _addAppointment(DateTime selectedDate, String eventName) {
-    setState(() {
-      _appointments.add(Appointment(
-        startTime: selectedDate,
-        endTime: selectedDate.add(Duration(hours: 1)), // 1 saatlik etkinlik
-        subject: eventName,
-        color: Colors.blue,
-      ));
-    });
-  }
 }
 
-// Etkinliklerin kaynağı
 class EventDataSource extends CalendarDataSource {
-  EventDataSource(List<Appointment> source) {
+  EventDataSource(List<Task> source) {
     appointments = source;
   }
 }
