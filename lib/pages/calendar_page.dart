@@ -51,9 +51,13 @@ class _CalendarPageState extends State<CalendarPage> {
           navigationDirection: MonthNavigationDirection.horizontal,
         ),
         onTap: (details) {
-          if (details.targetElement == CalendarElement.calendarCell) {
-            _showAddTaskBottomSheet(context);
-          }
+          setState(() {
+            _selectedDate = details.date;
+            if (_selectedDate != null) {
+              _showEventDialog();
+            }
+          });
+          //_showAddTaskBottomSheet(context);
         },
       ),
     );
@@ -87,6 +91,128 @@ class _CalendarPageState extends State<CalendarPage> {
               },
             ),
           ),
+        );
+      },
+    );
+  }
+
+  void _showEventDialog() {
+    String eventName = '';
+    DateTime startDate = _selectedDate ?? DateTime.now();
+    DateTime endTime = _selectedDate ?? DateTime.now();
+    Color selectedColor = Colors.blue;
+    List<Color> Colorss = [
+      Colors.blue,
+      Colors.purple,
+      Colors.orange,
+      Colors.amber,
+      Colors.pink,
+      Colors.green,
+      Colors.red
+    ];
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("dialog_title").tr(),
+          content: Column(
+            children: [
+              // event Name
+              TextField(
+                decoration:
+                    InputDecoration(labelText: "dialog_event_name".tr()),
+                onChanged: (value) {
+                  eventName = value;
+                },
+              ),
+
+              SizedBox(
+                height: 10,
+              ),
+
+              // Start Time select
+              ListTile(
+                title: Text("Başlama Tarihi: ${startDate.toLocal()}"),
+                trailing: Icon(Icons.calendar_today), // nu ikon değiştir
+                onTap: () async {
+                  DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: startDate,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                  );
+                  if (picked != null && picked != startDate) {
+                    setState(() {
+                      startDate = picked;
+                    });
+                  }
+                },
+              ),
+
+              // End Time select
+              ListTile(
+                title: Text("Bitiş Tarihi: ${endTime.toLocal()}"),
+                trailing: Icon(Icons.calendar_today),
+                onTap: () async {
+                  DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: endTime,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                  );
+                  if (picked != null && picked != endTime) {
+                    setState(() {
+                      endTime = picked;
+                    });
+                  }
+                },
+              ),
+
+              // Renk seçimi
+              ListTile(
+                title: Text("Etkinlik Rengi"),
+                trailing: DropdownButton<Color>(
+                  value: selectedColor,
+                  items: Colorss.map((Color color) {
+                    return DropdownMenuItem<Color>(
+                      value: color,
+                      child: Container(
+                        width: 24,
+                        height: 24,
+                        color: color,
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (Color? newColor) {
+                    setState(() {
+                      selectedColor = newColor ?? Colors.blue;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("dialog_cancel_buton").tr()),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  var _allNewTask = Task.createCalendarEvents(
+                      eventName: eventName,
+                      startTime: startDate,
+                      endTime: endTime,
+                      backgroundColor: selectedColor,
+                      isAllDay: true);
+                  _allTask.insert(0, _allNewTask);
+                  setState(() {});
+                },
+                child: Text("dialog_add_buton").tr())
+          ],
         );
       },
     );

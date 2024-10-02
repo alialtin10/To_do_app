@@ -7,5 +7,9 @@
     "navigation_day_label" : "To-Do",
     "navigation_calender_label" : "Calendar",
     "navigation_study_label" : "Study",
-    "calendar_page_title" : "Calendar"
+    "calendar_page_title" : "Calendar",
+    "dialog_title" : "Add Events",
+    "dialog_event_name" : "Event Name ",
+    "dialog_cancel_buton" : "Cancel",
+    "dialog_add_buton" : "Add"
 }

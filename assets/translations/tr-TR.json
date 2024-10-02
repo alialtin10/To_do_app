@@ -7,6 +7,13 @@
     "navigation_day_label" : "Yapilacaklar",
     "navigation_calender_label" : "Takvim",
     "navigation_study_label" : "Çalışmak",
-    "calendar_page_title" : "Takvim"
+    "calendar_page_title" : "Takvim",
+    "dialog_title" : "Add Events",
+    "dialog_event_name" : "Etkinlik Adı",
+    "dialog_cancel_buton" : "İptal",
+    "dialog_add_buton" : "Ekle"
+
+
+
 
 }
