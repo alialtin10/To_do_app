@@ -3,10 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:to_do_app/data/local_storage.dart';
-import 'package:to_do_app/pages/home_page.dart';
+import 'package:to_do_app/pages/todoDay_page.dart';
 import 'package:to_do_app/models/task_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:to_do_app/widgets/NavigationBar.dart';
+import 'package:to_do_app/models/color_adapter.dart';
 
 final locator = GetIt.instance;
 
@@ -17,6 +18,7 @@ void setup() {
 Future<void> setupHive() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TaskAdapter());
+  Hive.registerAdapter(ColorAdapter());
   // ignore: non_constant_identifier_names
   var TaskBox = await Hive.openBox<Task>('Tasks');
   for (var task in TaskBox.values) {

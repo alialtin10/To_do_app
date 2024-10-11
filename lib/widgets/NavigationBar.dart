@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_app/pages/calendar_page.dart';
-import 'package:to_do_app/pages/home_page.dart';
+import 'package:to_do_app/pages/todoDay_page.dart';
 import 'package:to_do_app/pages/study_page.dart';
 
 class Navigationbar extends StatefulWidget {
@@ -15,7 +15,7 @@ class _NavigationbarState extends State<Navigationbar> {
   int currentPageIndex = 0;
   // Sayfaları tutan bir liste
   final List<Widget> _pages = [
-    HomePage(),       // Günlük sayfası
+    TododayPage(),       // Günlük sayfası
     CalendarPage(),  // Takvim sayfası
     StudyPage(),     // Çalışma sayfası
   ];

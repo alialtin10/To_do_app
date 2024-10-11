@@ -7,14 +7,14 @@ import 'package:to_do_app/models/task_model.dart';
 import 'package:to_do_app/widgets/custom_search_delegate.dart';
 import 'package:to_do_app/widgets/task_list_item.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class TododayPage extends StatefulWidget {
+  const TododayPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<TododayPage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<TododayPage> {
   late List<Task> _allTasks;
   late LocalStorage _localStorage;
 

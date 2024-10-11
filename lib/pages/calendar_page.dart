@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:to_do_app/data/local_storage.dart';
+import 'package:to_do_app/main.dart';
 import 'package:to_do_app/models/task_model.dart';
 
 class CalendarPage extends StatefulWidget {
@@ -13,13 +15,16 @@ class CalendarPage extends StatefulWidget {
 
 class _CalendarPageState extends State<CalendarPage> {
   DateTime? _selectedDate;
-  late List<Task> _allTask;
+    late List<Task> _allTasks;
+  late LocalStorage _localStorage;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _allTask = <Task>[];
+    _localStorage = locator<LocalStorage>();
+    _allTasks = <Task>[];
+    _getAllTaskFromDb();
   }
 
   @override
@@ -38,7 +43,7 @@ class _CalendarPageState extends State<CalendarPage> {
         firstDayOfWeek: 1,
         allowAppointmentResize: true,
         allowDragAndDrop: true,
-        dataSource: EventDataSource(_allTask),
+        dataSource: EventDataSource(_allTasks),
         allowedViews: [
           CalendarView.day,
           CalendarView.month,
@@ -50,51 +55,22 @@ class _CalendarPageState extends State<CalendarPage> {
           //agendaViewHeight: 100,
           navigationDirection: MonthNavigationDirection.horizontal,
         ),
-        onTap: (details) {
-          setState(() {
+        onLongPress: (details) {
+           setState(() {
             _selectedDate = details.date;
             if (_selectedDate != null) {
               _showEventDialog();
             }
           });
-          //_showAddTaskBottomSheet(context);
+        },
+        onTap: (details) {
+          
         },
       ),
     );
   }
 
-  void _showAddTaskBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Container(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          width: MediaQuery.of(context).size.width,
-          child: ListTile(
-            title: TextField(
-              autofocus: true,
-              style: const TextStyle(fontSize: 20),
-              decoration: InputDecoration(
-                hintText: "add_task".tr(),
-                border: InputBorder.none,
-              ),
-              onSubmitted: (value) {
-                Navigator.of(context).pop();
-                if (value.length > 3) {
-                  DatePicker.showDatePicker(context, onConfirm: (time) async {
-                    var addNewTask = Task.create(name: value, createdAt: time);
-                    _allTask.insert(0, addNewTask);
-                    setState(() {});
-                  });
-                }
-              },
-            ),
-          ),
-        );
-      },
-    );
-  }
+
 
   void _showEventDialog() {
     String eventName = '';
@@ -124,11 +100,12 @@ class _CalendarPageState extends State<CalendarPage> {
                     InputDecoration(labelText: "dialog_event_name".tr()),
                 onChanged: (value) {
                   eventName = value;
+                  print(eventName);
                 },
               ),
 
               SizedBox(
-                height: 10,
+                height: 5,
               ),
 
               // Start Time select
@@ -145,6 +122,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   if (picked != null && picked != startDate) {
                     setState(() {
                       startDate = picked;
+                      print(startDate.toString());
                     });
                   }
                 },
@@ -186,7 +164,8 @@ class _CalendarPageState extends State<CalendarPage> {
                   }).toList(),
                   onChanged: (Color? newColor) {
                     setState(() {
-                      selectedColor = newColor ?? Colors.blue;
+                      selectedColor = newColor!;
+                      print(selectedColor);
                     });
                   },
                 ),
@@ -200,16 +179,18 @@ class _CalendarPageState extends State<CalendarPage> {
                 },
                 child: Text("dialog_cancel_buton").tr()),
             TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
+                onPressed: ()  async {
                   var _allNewTask = Task.createCalendarEvents(
                       eventName: eventName,
                       startTime: startDate,
                       endTime: endTime,
                       backgroundColor: selectedColor,
                       isAllDay: true);
-                  _allTask.insert(0, _allNewTask);
+                  _allTasks.insert(0, _allNewTask);
+                  await _localStorage.addTask(task: _allNewTask);
                   setState(() {});
+                  Navigator.of(context).pop();
+
                 },
                 child: Text("dialog_add_buton").tr())
           ],
@@ -217,10 +198,50 @@ class _CalendarPageState extends State<CalendarPage> {
       },
     );
   }
+
+void _getAllTaskFromDb() async {
+    _allTasks = await _localStorage.getAllTask();
+    print(_allTasks.toString());
+    setState(() {});
+  }
+
 }
+
+
 
 class EventDataSource extends CalendarDataSource {
   EventDataSource(List<Task> source) {
     appointments = source;
   }
+
+  @override
+  String getId(int index){
+    return appointments![index].id;
+  }
+
+  @override
+  DateTime getStartTime(int index) {
+    return appointments![index].createdAt;
+  }
+
+  @override
+  DateTime getEndTime(int index) {
+    if(appointments![index].endTime != null){
+      return appointments![index].endTime;
+    }else{
+    return appointments![index].endTime = appointments![index].createdAt.add(const Duration(hours: 2));
+    }
+  }
+
+  @override
+  String getSubject(int index) {
+    return appointments![index].name;
+  }
+
+  @override
+  Color getColor(int index) {
+    return appointments![index].backgroundColor;
+  }
+
+
 }
